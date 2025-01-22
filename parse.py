@@ -1,14 +1,6 @@
-import subprocess
-import streamlit as st
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 
-from transformers import pipeline
-
-# Example Hugging Face pipeline for question-answering
-model = pipeline("question-answering", model="deepset/roberta-base-squad2")
-
-# Define your template and model
 template = (
     "You are tasked with extracting specific information from the following text content: {dom_content}. "
     "Please follow these instructions carefully: \n\n"
@@ -18,8 +10,9 @@ template = (
     "4. **Direct Data Only:** Your output should contain only the data that is explicitly requested, with no other text."
 )
 
+model = OllamaLLM(model="gemma2:2b")
 
-# Function to parse content using the Ollama model
+
 def parse_with_ollama(dom_chunks, parse_description):
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | model
@@ -34,4 +27,3 @@ def parse_with_ollama(dom_chunks, parse_description):
         parsed_results.append(response)
 
     return "\n".join(parsed_results)
-
